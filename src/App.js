@@ -1,24 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import Home from "./Components/Home";
+import {useEffect, useState} from 'react'
+import AddExpense from "./Components/AddExpense";
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import Summarize from "./Components/Summarize";
+import Navbar from "./Components/Navbar";
 
 function App() {
+  const [expenses, setExpenses] = useState(null)
+  const {error, setError} = useState(null)
+  const [sum, setSum] = useState(0)
+
+    useEffect(() => {
+      fetch("http://localhost:8000/expenses")
+      .then(res => {
+          if(!res.ok){
+            throw Error("Problem Fetching Data ... ")
+          }
+          return res.json()
+      })
+      .then(data => {
+          setExpenses(data)
+          const summerize = data.reduce((prev, nxt) => {return prev + nxt.price}, 0)
+          setSum(summerize)
+      }).catch(err=>{
+        setError(err.message)
+      })
+    
+  }, [])
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Summarize sum={sum} />
+        
+        <Switch>
+          <Route exact path="/">
+           <Home expenses={expenses} />
+          </Route>
+          <Route path="/add">
+            <AddExpense />
+          </Route>
+        </Switch>
+        {error && 
+        <>
+          <div className="error">
+            <p>Ops. soemthing went wrong ... {error.message}</p>
+          </div>
+        </>
+        }
+
+        
+      </div>
+    </Router>
   );
 }
 

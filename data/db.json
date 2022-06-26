@@ -1,0 +1,43 @@
+{
+  "expenses": [
+    {
+      "id": "57a8ebcd-5063-4ce9-949d-e9c5d2a36842",
+      "exname": "Books",
+      "price": 2000,
+      "category": "Education",
+      "date": {
+        "day": 26,
+        "month": 6,
+        "year": 2022,
+        "hour": 12,
+        "minute": 46
+      }
+    },
+    {
+      "id": "525c05c6-a6a6-44bd-8f44-44f766b0374e",
+      "exname": "Coca Cola Zero",
+      "price": 90,
+      "category": "Snacks",
+      "date": {
+        "day": 26,
+        "month": 6,
+        "year": 2022,
+        "hour": 12,
+        "minute": 46
+      }
+    },
+    {
+      "id": "efe396f2-944c-4c4c-9967-4163cbd2cc90",
+      "exname": "Rubik Cube 3x3",
+      "price": 500,
+      "category": "Luxury",
+      "date": {
+        "day": 26,
+        "month": 6,
+        "year": 2022,
+        "hour": 12,
+        "minute": 48
+      }
+    }
+  ]
+}
