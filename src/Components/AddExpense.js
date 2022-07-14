@@ -4,7 +4,7 @@ import {v4 as uuidv4} from 'uuid'
 
 const AddExpense = () => {
     
-    const [expense,setExprense] = useState({})
+    const [expense,setExpense] = useState({})
     
     const history = useHistory()
     
