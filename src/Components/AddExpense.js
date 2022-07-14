@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import {v4 as uuidv4} from 'uuid'
+import { useHistory } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid'
+
 const AddExpense = () => {
-    
-    const [exname, setExName] = useState("")
-    const [price, setPrice] = useState('')
-    const [category, setCategory] = useState("")
-    
+
+    const [expense, setExpense] = useState({})
+
     const history = useHistory()
-    
-    const handleSubmit = (e) => {
+
+    const handleChange = (e) => {
+        setExpense({ ...expense, [e.target.name]: e.target.value })
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
         const id = uuidv4()
@@ -24,46 +27,44 @@ const AddExpense = () => {
             minute: today.getMinutes()
         }
 
-        const expense = {id,exname, price, category, date}
-        console.log(expense);
-
         fetch("http://localhost:8000/expenses", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(expense)
-        })
-        .then(() => {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...expense, id, date })
+        }).then(() => {
+            setExpense({})
+            history.push('/')
+        }).catch(err => {
+            console.log(err)
+            setExpense({})
             history.push('/')
         })
-
-        setExName('')
-        setPrice()
-        setCategory('')
-        history.push('/')
-
     }
 
     return (
         <div className="add-expense">
             <form onSubmit={handleSubmit}>
-                
+
                 <label>Add What you bought:</label>
                 <input
-                    onChange={(e) => setExName(e.target.value)}
-                    value={exname}
-                    type="text" 
+                    onChange={handleChange}
+                    name="exname"
+                    value={expense.exname || ''}
+                    type="text"
                 />
                 <label>Price:</label>
                 <input
-                    value={price}
-                    onChange={(e) => setPrice(parseInt(e.target.value))}
+                    value={expense.price || "0"}
+                    name="price"
+                    onChange={handleChange}
                     type="number"
                 />
 
                 <label>Category</label>
                 <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value) }
+                    value={expense.category}
+                    name="category"
+                    onChange={handleChange}
                 >
                     <option value="Food">Food</option>
                     <option value="Luxury">Luxury</option>
@@ -77,5 +78,5 @@ const AddExpense = () => {
         </div>
     );
 }
- 
+
 export default AddExpense;
