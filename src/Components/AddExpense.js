@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom";
 import {v4 as uuidv4} from 'uuid'
+
 const AddExpense = () => {
     
-    const [exname, setExName] = useState("")
-    const [price, setPrice] = useState('')
-    const [category, setCategory] = useState("")
+    const [expense,setExprense] = useState({})
     
     const history = useHistory()
+    
+    const handleChange = (e) => {
+        setExpense({...expense, [e.target.name]: e.target.value})
+    }
     
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -24,7 +27,8 @@ const AddExpense = () => {
             minute: today.getMinutes()
         }
 
-        const expense = {id,exname, price, category, date}
+        setExpense({...expense, id,date})
+        
         console.log(expense);
 
         fetch("http://localhost:8000/expenses", {
@@ -33,13 +37,9 @@ const AddExpense = () => {
             body: JSON.stringify(expense)
         })
         .then(() => {
+            setExpense({})
             history.push('/')
         })
-
-        setExName('')
-        setPrice()
-        setCategory('')
-        history.push('/')
 
     }
 
@@ -49,21 +49,24 @@ const AddExpense = () => {
                 
                 <label>Add What you bought:</label>
                 <input
-                    onChange={(e) => setExName(e.target.value)}
-                    value={exname}
+                    onChange={handleChange}
+                    name="exname"
+                    value={expense.exname || ''}
                     type="text" 
                 />
                 <label>Price:</label>
                 <input
-                    value={price}
-                    onChange={(e) => setPrice(parseInt(e.target.value))}
+                    value={expense.price || "0"}
+                    name="price"
+                    onChange={handleChange}
                     type="number"
                 />
 
                 <label>Category</label>
                 <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value) }
+                    value={expense.category}
+                    name="category"
+                    onChange={handleChange}
                 >
                     <option value="Food">Food</option>
                     <option value="Luxury">Luxury</option>
